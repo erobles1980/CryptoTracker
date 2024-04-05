@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 
@@ -18,6 +20,7 @@ import androidx.compose.material3.Icon
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,37 +28,51 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
 import com.example.cryptotracker.model.Assets
+import com.example.cryptotracker.viewmodel.AssestsViewModel
 
 @Composable
-fun AssetList(){
-    Column (
+fun AssetScreen(viewModel: AssestsViewModel){
+
+    val asset=viewModel.assets
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchAssets()
+    }
+
+    LazyColumn (
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
             //.background(MaterialTheme.colorScheme.background.Black)
     ){
-        AssetRow(
-            Assets(
-                id = "bitcoin",
-                name="Bitcoin",
-                symbol = "BTC",
-                price = 65000.0,
-                percentage = 5.75
-            )
-        )
-        Divider()
-        AssetRow(
-            Assets(
-                id = "ethereum",
-                name="Ethereum",
-                symbol = "ETH",
-                price = 35000.0,
-                percentage = -1.78
-            )
-        )
-        Divider()
+       items(asset){currentAsset->
+           AssetRow(asset = currentAsset)
+           Divider()
+       }
+
+//        AssetRow(
+//            Assets(
+//                id = "bitcoin",
+//                name="Bitcoin",
+//                symbol = "BTC",
+//                price = 65000.0,
+//                percentage = 5.75
+//            )
+//        )
+//        Divider()
+//        AssetRow(
+//            Assets(
+//                id = "ethereum",
+//                name="Ethereum",
+//                symbol = "ETH",
+//                price = 35000.0,
+//                percentage = -1.78
+//            )
+//        )
+//        Divider()
     }
 }
 @Composable
@@ -113,6 +130,6 @@ fun AssetRow(asset: Assets){
 )
 @Composable
 fun AssetRowPreview(){
-    AssetList()
+    AssetScreen(AssestsViewModel())
 
 }
