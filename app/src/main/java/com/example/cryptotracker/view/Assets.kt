@@ -1,6 +1,7 @@
 package com.example.cryptotracker.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+//import androidx.compose.material3.MaterialTheme
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,16 +27,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.tooling.preview.Preview
+
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
+
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.cryptotracker.model.Assets
 import com.example.cryptotracker.viewmodel.AssestsViewModel
 
 @Composable
-fun AssetScreen(viewModel: AssestsViewModel){
+fun AssetScreen(viewModel: AssestsViewModel,navHostController: NavHostController){
 
     val asset=viewModel.assets
 
@@ -46,10 +49,12 @@ fun AssetScreen(viewModel: AssestsViewModel){
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            //.background(MaterialTheme.colorScheme.background.Black)
+            //.background(MaterialTheme.colorScheme.onBackground)
     ){
        items(asset){currentAsset->
-           AssetRow(asset = currentAsset)
+           AssetRow(asset = currentAsset){assetId->
+               navHostController.navigate("${BottomNavItem.Home.route}/$assetId")
+           }
            Divider()
        }
 
@@ -76,11 +81,12 @@ fun AssetScreen(viewModel: AssestsViewModel){
     }
 }
 @Composable
-fun AssetRow(asset: Assets){
+fun AssetRow(asset: Assets,onClick:(String) -> Unit){
     Row (verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .clickable { onClick(asset.id) }
     ){
         Box(modifier = Modifier
             .padding(horizontal = 8.dp)){
@@ -103,20 +109,22 @@ fun AssetRow(asset: Assets){
         Column {
             Text(
                 text = asset.name,
+                fontSize = 16.sp,
                 color = Color.White
             )
             Text(
                 text = asset.symbol,
+                fontSize = 14.sp,
                 color = Color.White
             )
         }
         Spacer(modifier = Modifier.weight(1f))
         Text(text = "$${asset.price}",
-            fontSize = 15.sp,
+            fontSize = 16.sp,
             color = Color.White,
             modifier = Modifier
                 .padding(horizontal = 8.dp))
-        Text(text = "$${asset.percentage}%",
+        Text(text = "${asset.percentage}%",
             color = if (asset.percentage>=0) Color.Green else Color.Red,
             fontSize = 15.sp,
             modifier = Modifier
@@ -124,12 +132,12 @@ fun AssetRow(asset: Assets){
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-fun AssetRowPreview(){
-    AssetScreen(AssestsViewModel())
-
-}
+//@Preview(
+//    showBackground = true,
+//    showSystemUi = true
+//)
+//@Composable
+//fun AssetRowPreview(){
+//    AssetScreen(AssestsViewModel())
+//
+//}

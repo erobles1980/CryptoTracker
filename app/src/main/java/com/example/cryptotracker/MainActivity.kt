@@ -14,7 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 
 import com.example.cryptotracker.ui.theme.CryptoTrackerTheme
 
-import com.example.cryptotracker.view.AssetScreen
+
+import com.example.cryptotracker.view.MainScreen
 import com.example.cryptotracker.viewmodel.AssestsViewModel
 
 class MainActivity : ComponentActivity() {
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AssetScreen(viewModel)
+                    MainScreen(assestsViewModel = viewModel)
                 }
             }
         }
